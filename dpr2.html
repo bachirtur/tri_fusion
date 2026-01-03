@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tri-Fusion - Cours Complet avec Indices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            color: #4a5568;
+        }
+
+        .tab:hover {
+            background: #edf2f7;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(3px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SECTIONS THÉORIQUES */
+        .theory-section {
+            margin: 30px 0;
+        }
+
+        .hero-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .hero-box h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .hero-box p {
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+        }
+
+        .card h3 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card p, .card li {
+            color: #4a5568;
+            line-height: 2;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .card ul {
+            margin-left: 30px;
+        }
+
+        .indices-explanation {
+            background: #fef5e7;
+            border: 3px solid #f39c12;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .indices-explanation h4 {
+            color: #d68910;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .indices-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .index-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .index-label {
+            font-weight: bold;
+            color: #d68910;
+            font-size: 1.2em;
+        }
+
+        .index-value {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .index-arrow {
+            font-size: 2em;
+            color: #d68910;
+        }
+
+        .algorithm-box {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 30px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.8;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .algorithm-box .keyword {
+            color: #f6ad55;
+            font-weight: bold;
+        }
+
+        .algorithm-box .function {
+            color: #63b3ed;
+            font-weight: bold;
+        }
+
+        .algorithm-box .comment {
+            color: #68d391;
+            font-style: italic;
+        }
+
+        .algorithm-box .variable {
+            color: #fc8181;
+        }
+
+        .algorithm-box .number {
+            color: #b794f4;
+        }
+
+        .example-box {
+            background: #e6f7ff;
+            border: 3px solid #1890ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .example-box h4 {
+            color: #0050b3;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .step-by-step {
+            margin: 20px 0;
+        }
+
+        .step-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #52c41a;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #52c41a;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .highlight-code {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ANIMATION */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 14px 28px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .options {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 20px 0;
+            align-items: center;
+            flex-wrap: wrap;
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-group label {
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 1em;
+        }
+
+        input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .speed-control input[type="range"] {
+            width: 150px;
+            height: 8px;
+        }
+
+        .speed-value {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .visualization-container {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .step-counter {
+            text-align: center;
+            font-size: 1.4em;
+            color: #2d3748;
+            margin: 20px 0;
+            font-weight: bold;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .array-visualization {
+            margin: 30px 0;
+        }
+
+        .array-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 8px;
+            margin: 30px 0;
+            min-height: 250px;
+        }
+
+        .array-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .array-bar {
+            width: 55px;
+            background: #667eea;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            padding-bottom: 8px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .array-index {
+            margin-top: 8px;
+            font-size: 15px;
+            color: #2d3748;
+            font-weight: bold;
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .array-bar::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 12px solid transparent;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .array-bar.active::before {
+            opacity: 1;
+            border-top-color: #e53e3e;
+        }
+
+        .dividing {
+            background: #f6ad55 !important;
+            animation: pulse 1s infinite;
+        }
+
+        .left-part {
+            background: #4299e1 !important;
+        }
+
+        .right-part {
+            background: #48bb78 !important;
+        }
+
+        .merging {
+            background: #ed64a6 !important;
+            animation: pulse 1s infinite;
+        }
+
+        .sorted {
+            background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+        }
+
+        .current-position {
+            background: #e53e3e !important;
+            transform: scale(1.1);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .legend-color {
+            width: 35px;
+            height: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .legend-text {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* Visualisation de la fusion détaillée */
+        .merge-detailed {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .merge-title {
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 25px;
+        }
+
+        .merge-arrays {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .merge-array-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .merge-array-label {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2d3748;
+            padding: 8px 20px;
+            border-radius: 20px;
+        }
+
+        .merge-array-label.left {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .merge-array-label.right {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .merge-array-label.result {
+            background: #fed7e2;
+            color: #97266d;
+        }
+
+        .merge-cells {
+            display: flex;
+            gap: 8px;
+        }
+
+        .merge-cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #cbd5e0;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2em;
+            background: white;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .merge-cell.pointer-here {
+            border-color: #e53e3e;
+            border-width: 4px;
+            background: #fff5f5;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+        }
+
+        .merge-cell.used {
+            opacity: 0.3;
+            background: #e2e8f0;
+        }
+
+        .merge-pointer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .pointer-arrow {
+            font-size: 2em;
+            color: #e53e3e;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .pointer-label {
+            font-weight: bold;
+            color: #e53e3e;
+            font-size: 1.1em;
+            background: #fff5f5;
+            padding: 5px 12px;
+            border-radius: 15px;
+        }
+
+        /* Indices en temps réel */
+        .indices-display {
+            background: linear-gradient(135deg, #fef5e7 0%, #fdebd0 100%);
+            border: 3px solid #f39c12;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .indices-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #d68910;
+            margin-bottom: 20px;
+        }
+
+        .indices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .indice-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .indice-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .indice-name {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .indice-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .indice-description {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        /* Informations détaillées */
+        .info-panel {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-icon {
+            font-size: 2.5em;
+        }
+
+        .info-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .phase-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .phase-diviser {
+            background: #fbd38d;
+            color: #744210;
+        }
+
+        .phase-regner {
+            background: #b794f4;
+            color: #44337a;
+        }
+
+        .phase-combiner {
+            background: #9ae6b4;
+            color: #22543d;
+        }
+
+        .info-content {
+            color: #4a5568;
+            line-height: 2;
+            font-size: 1.1em;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            white-space: pre-line;
+        }
+
+        .info-content strong {
+            color: #2d3748;
+        }
+
+        /* Arbre de récursion amélioré */
+        .tree-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .tree-title {
+            text-align: center;
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+
+        .tree-level {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .tree-node {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-weight: bold;
+            min-width: 100px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tree-node::before {
+            content: attr(data-indices);
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        .tree-node.active {
+            background: #667eea;
+            color: white;
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            animation: pulse 1s infinite;
+        }
+
+        .tree-node.completed {
+            background: #38a169;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .tree-node.dividing {
+            background: #f6ad55;
+            color: white;
+            border-color: #f6ad55;
+        }
+
+        .tree-level-label {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .array-bar {
+                width: 40px;
+                font-size: 1em;
+            }
+
+            .merge-cells {
+                flex-wrap: wrap;
+            }
+
+            .controls {
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+
+        .comparison-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .comparison-box {
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .comparison-operator {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .comparison-result {
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .comparison-result.true {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .comparison-result.false {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Tri-Fusion - Cours Complet</h1>
+        <p class="subtitle">Maîtriser les algorithmes FUSION et TRI-FUSION avec les indices</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('intro')">📖 Introduction</button>
+            <button class="tab" onclick="switchTab('fusion')">🔗 Algorithme FUSION</button>
+            <button class="tab" onclick="switchTab('trifusion')">🔀 Algorithme TRI-FUSION</button>
+            <button class="tab" onclick="switchTab('animation')">🎬 Animation Complète</button>
+        </div>
+
+        <!-- ONGLET INTRODUCTION -->
+        <div id="intro" class="tab-content active">
+            <div class="hero-box">
+                <h2>🎯 Bienvenue dans le Tri-Fusion</h2>
+                <p>Un algorithme de tri efficace basé sur le paradigme "Diviser pour Régner"</p>
+            </div>
+
+            <div class="card">
+                <h3>📚 Comprendre les Indices en Algorithmique</h3>
+                <div class="indices-explanation">
+                    <h4>⚠️ Convention Importante : Les indices commencent à 1</h4>
+                    <p><strong>En algorithmique théorique, contrairement à la plupart des langages de programmation, les tableaux commencent à l'indice 1.</strong></p>
+                    
+                    <div class="indices-visual">
+                        <div class="index-box">
+                            <div class="index-label">Tableau A</div>
+                            <div style="display: flex; gap: 5px;">
+                                <div style="text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">23</div>
+                                    <div style="margin-top: 5px; font-size: 0.9em; color: #e53e3e; font-weight: bold;">A[1]</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">12</div>
+                                    <div style="margin-top: 5px; font-size: 0.9em; color: #e53e3e; font-weight: bold;">A[2]</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">4</div>
+                                    <div style="margin-top: 5px; font-size: 0.9em; color: #e53e3e; font-weight: bold;">A[3]</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">...</div>
+                                    <div style="margin-top: 5px; font-size: 0.9em; color: #e53e3e; font-weight: bold;">...</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; font-weight: bold;">3</div>
+                                    <div style="margin-top: 5px; font-size: 0.9em; color: #e53e3e; font-weight: bold;">A[9]</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 20px;"><strong>Note pour l'implémentation :</strong> Dans cette animation pédagogique, nous afficherons les indices à partir de 0 (convention JavaScript) mais les explications algorithmiques utiliseront les indices à partir de 1.</p>
+                </div>
+
+                <h4 style="margin-top: 30px; color: #667eea;">🔑 Les Indices Clés du Tri-Fusion</h4>
+                <ul>
+                    <li><strong>p (premier)</strong> : Indice de début du sous-tableau à traiter</li>
+                    <li><strong>r (dernier)</strong> : Indice de fin du sous-tableau à traiter</li>
+                    <li><strong>q (milieu)</strong> : Indice du milieu, calculé par q = ⌊(p + r) / 2⌋</li>
+                    <li><strong>n1</strong> : Nombre d'éléments dans le sous-tableau gauche (n1 = q - p + 1)</li>
+                    <li><strong>n2</strong> : Nombre d'éléments dans le sous-tableau droit (n2 = r - q)</li>
+                    <li><strong>i</strong> : Pointeur sur le tableau L (gauche)</li>
+                    <li><strong>j</strong> : Pointeur sur le tableau R (droite)</li>
+                    <li><strong>k</strong> : Position courante dans le tableau A résultat</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Le Paradigme "Diviser pour Régner"</h3>
+                <p>Le tri-fusion repose sur trois étapes fondamentales :</p>
+                
+                <div class="step-by-step">
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <strong style="font-size: 1.2em;">DIVISER</strong><br>
+                        On divise le problème en sous-problèmes plus petits en calculant le milieu du tableau.
+                    </div>
+                    
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <strong style="font-size: 1.2em;">RÉGNER</strong><br>
+                        On résout les sous-problèmes récursivement. Le cas de base est un tableau d'un seul élément.
+                    </div>
+                    
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <strong style="font-size: 1.2em;">COMBINER</strong><br>
+                        On fusionne les solutions des sous-problèmes pour obtenir la solution globale.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET FUSION -->
+        <div id="fusion" class="tab-content">
+            <div class="hero-box">
+                <h2>🔗 Algorithme FUSION</h2>
+                <p>Fusionner deux sous-tableaux triés en un seul tableau trié</p>
+            </div>
+
+            <div class="card">
+                <h3>📋 Spécification de l'Algorithme FUSION</h3>
+                <p><strong>Entrées :</strong></p>
+                <ul>
+                    <li><strong>A</strong> : Tableau d'entiers</li>
+                    <li><strong>p</strong> : Indice de début (premier élément)</li>
+                    <li><strong>q</strong> : Indice du milieu</li>
+                    <li><strong>r</strong> : Indice de fin (dernier élément)</li>
+                </ul>
+                <p><strong>Précondition :</strong> Les sous-tableaux A[p..q] et A[q+1..r] sont déjà triés</p>
+                <p><strong>Postcondition :</strong> Le tableau A[p..r] est trié</p>
+            </div>
+
+            <div class="card">
+                <h3>💡 Principe de Fonctionnement</h3>
+                <p>L'algorithme FUSION fonctionne comme suit :</p>
+                
+                <div class="example-box">
+                    <h4>📝 Exemple Concret</h4>
+                    <p>Supposons que nous ayons :</p>
+                    <ul>
+                        <li>A = [4, 12, 23, 32, 35, 56, ...]</li>
+                        <li>p = 1 (début du premier sous-tableau)</li>
+                        <li>q = 3 (fin du premier sous-tableau)</li>
+                        <li>r = 6 (fin du second sous-tableau)</li>
+                    </ul>
+                    <p><strong>Sous-tableau gauche :</strong> A[1..3] = [4, 12, 23] (déjà trié)</p>
+                    <p><strong>Sous-tableau droit :</strong> A[4..6] = [32, 35, 56] (déjà trié)</p>
+                    <p><strong>Objectif :</strong> Fusionner ces deux sous-tableaux pour obtenir A[1..6] = [4, 12, 23, 32, 35, 56]</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔢 Comprendre les Indices dans FUSION</h3>
+                
+                <div class="indices-explanation">
+                    <h4>📐 Calcul des Tailles</h4>
+                    <div class="highlight-code">
+n1 ← q - p + 1    <span class="comment">// Nombre d'éléments dans L</span>
+n2 ← r - q        <span class="comment">// Nombre d'éléments dans R</span>
+                    </div>
+                    
+                    <p><strong>Exemple avec p=1, q=3, r=6 :</strong></p>
+                    <ul>
+                        <li>n1 = 3 - 1 + 1 = 3 éléments dans L</li>
+                        <li>n2 = 6 - 3 = 3 éléments dans R</li>
+                    </ul>
+                    
+                    <p style="margin-top: 20px;"><strong>Pourquoi +1 pour n1 ?</strong></p>
+                    <p>Parce que les indices sont inclusifs. De l'indice 1 à 3, il y a 3 éléments : A[1], A[2], A[3]</p>
+                    
+                    <p style="margin-top: 20px;"><strong>Pourquoi pas de +1 pour n2 ?</strong></p>
+                    <p>Parce que le sous-tableau droit commence à q+1. De l'indice 4 à 6, il y a 6-4+1 = 3 éléments, mais nous calculons r-q directement.</p>
+                </div>
+
+                <div class="indices-explanation" style="margin-top: 20px;">
+                    <h4>📊 Copie dans L et R</h4>
+                    <div class="highlight-code">
+<span class="keyword">pour</span> i ← 1 <span class="keyword">à</span> n1:
+    L[i] ← A[p + i - 1]    <span class="comment">// Copie de A vers L</span>
+<span class="keyword">fin pour</span>
+
+<span class="keyword">pour</span> j ← 1 <span class="keyword">à</span> n2:
+    R[j] ← A[q + j]        <span class="comment">// Copie de A vers R</span>
+<span class="keyword">fin pour</span>
+                    </div>
+                    
+                    <p><strong>Explication détaillée :</strong></p>
+                    
+                    <p style="margin-top: 15px;"><strong>Pour le tableau L (gauche) :</strong></p>
+                    <ul>
+                        <li>i varie de 1 à n1 (indices dans L)</li>
+                        <li>L[1] ← A[p+1-1] = A[p] = A[1] = 4</li>
+                        <li>L[2] ← A[p+2-1] = A[p+1] = A[2] = 12</li>
+                        <li>L[3] ← A[p+3-1] = A[p+2] = A[3] = 23</li>
+                    </ul>
+                    
+                    <p style="margin-top: 15px;"><strong>Pour le tableau R (droite) :</strong></p>
+                    <ul>
+                        <li>j varie de 1 à n2 (indices dans R)</li>
+                        <li>R[1] ← A[q+1] = A[4] = 32</li>
+                        <li>R[2] ← A[q+2] = A[5] = 35</li>
+                        <li>R[3] ← A[q+3] = A[6] = 56</li>
+                    </ul>
+                    
+                    <p style="margin-top: 20px;"><strong>Résultat :</strong></p>
+                    <p>L = [4, 12, 23] et R = [32, 35, 56]</p>
+                </div>
+
+                <div class="indices-explanation" style="margin-top: 20px;">
+                    <h4>🔄 Fusion des Tableaux</h4>
+                    <div class="highlight-code">
+i ← 1
+j ← 1
+<span class="keyword">pour</span> k ← p <span class="keyword">à</span> r:
+    <span class="keyword">si</span> L[i] ≤ R[j]:
+        A[k] ← L[i]
+        i ← i + 1
+    <span class="keyword">sinon</span>:
+        A[k] ← R[j]
+        j ← j + 1
+    <span class="keyword">fin si</span>
+<span class="keyword">fin pour</span>
+                    </div>
+                    
+                    <p><strong>Étape par étape :</strong></p>
+                    <ul>
+                        <li><strong>k=1 :</strong> Compare L[1]=4 et R[1]=32 → 4≤32 → A[1]=4, i=2</li>
+                        <li><strong>k=2 :</strong> Compare L[2]=12 et R[1]=32 → 12≤32 → A[2]=12, i=3</li>
+                        <li><strong>k=3 :</strong> Compare L[3]=23 et R[1]=32 → 23≤32 → A[3]=23, i=4</li>
+                        <li><strong>k=4 :</strong> L épuisé, copie R[1]=32 → A[4]=32, j=2</li>
+                        <li><strong>k=5 :</strong> Copie R[2]=35 → A[5]=35, j=3</li>
+                        <li><strong>k=6 :</strong> Copie R[3]=56 → A[6]=56, j=4</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💻 Algorithme Complet FUSION</h3>
+                <div class="algorithm-box">
+<span class="function">FUSION</span>(A, p, q, r):
+  <span class="comment">// Calcul des tailles</span>
+  n1 ← q - p + 1                    <span class="comment">// Taille du sous-tableau gauche</span>
+  n2 ← r - q                        <span class="comment">// Taille du sous-tableau droit</span>
+  
+  <span class="comment">// Création des tableaux temporaires</span>
+  créer tableau L[1..n1+1] et R[1..n2+1]
+  
+  <span class="comment">// Copie des données dans L</span>
+  <span class="keyword">pour</span> <span class="variable">i</span> ← <span class="number">1</span> <span class="keyword">à</span> n1:
+    L[i] ← A[p + i - 1]
+  <span class="keyword">fin pour</span>
+  
+  <span class="comment">// Copie des données dans R</span>
+  <span class="keyword">pour</span> <span class="variable">j</span> ← <span class="number">1</span> <span class="keyword">à</span> n2:
+    R[j] ← A[q + j]
+  <span class="keyword">fin pour</span>
+  
+  <span class="comment">// Ajout de sentinelles (∞)</span>
+  L[n1 + 1] ← ∞
+  R[n2 + 1] ← ∞
+  
+  <span class="comment">// Initialisation des pointeurs</span>
+  i ← 1
+  j ← 1
+  
+  <span class="comment">// Fusion des deux sous-tableaux</span>
+  <span class="keyword">pour</span> <span class="variable">k</span> ← p <span class="keyword">à</span> r:
+    <span class="keyword">si</span> L[i] ≤ R[j]:
+      A[k] ← L[i]              <span class="comment">// Prendre de L</span>
+      i ← i + 1                <span class="comment">// Avancer dans L</span>
+    <span class="keyword">sinon</span>:
+      A[k] ← R[j]              <span class="comment">// Prendre de R</span>
+      j ← j + 1                <span class="comment">// Avancer dans R</span>
+    <span class="keyword">fin si</span>
+  <span class="keyword">fin pour</span>
+<span class="keyword">fin</span> FUSION
+                </div>
+
+                <p style="margin-top: 20px;"><strong>🎯 Points Clés :</strong></p>
+                <ul>
+                    <li>Les sentinelles (∞) évitent de vérifier si un tableau est vide</li>
+                    <li>La boucle principale fait exactement (r-p+1) itérations</li>
+                    <li>La complexité temporelle est O(n) où n = r-p+1</li>
+                    <li>La complexité spatiale est O(n) pour les tableaux L et R</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ONGLET TRI-FUSION -->
+        <div id="trifusion" class="tab-content">
+            <div class="hero-box">
+                <h2>🔀 Algorithme TRI-FUSION</h2>
+                <p>Diviser récursivement puis fusionner pour trier</p>
+            </div>
+
+            <div class="card">
+                <h3>📋 Spécification de TRI-FUSION</h3>
+                <p><strong>Entrées :</strong></p>
+                <ul>
+                    <li><strong>A</strong> : Tableau d'entiers à trier</li>
+                    <li><strong>p</strong> : Indice de début du sous-tableau</li>
+                    <li><strong>r</strong> : Indice de fin du sous-tableau</li>
+                </ul>
+                <p><strong>Appel initial :</strong> TRI-FUSION(A, 1, A.longueur)</p>
+                <p><strong>Postcondition :</strong> Le sous-tableau A[p..r] est trié en ordre croissant</p>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Principe Récursif</h3>
+                
+                <div class="example-box">
+                    <h4>🌳 Structure Récursive</h4>
+                    <p>L'algorithme fonctionne par récursion :</p>
+                    
+                    <div class="step-by-step">
+                        <div class="step-item">
+                            <span class="step-number">1</span>
+                            <strong>Condition d'arrêt :</strong> Si p ≥ r, le tableau a au plus un élément, donc il est déjà trié.
+                        </div>
+                        
+                        <div class="step-item">
+                            <span class="step-number">2</span>
+                            <strong>Division :</strong> Calculer q = ⌊(p + r) / 2⌋ pour diviser le tableau en deux.
+                        </div>
+                        
+                        <div class="step-item">
+                            <span class="step-number">3</span>
+                            <strong>Récursion gauche :</strong> Appeler TRI-FUSION(A, p, q) pour trier la moitié gauche.
+                        </div>
+                        
+                        <div class="step-item">
+                            <span class="step-number">4</span>
+                            <strong>Récursion droite :</strong> Appeler TRI-FUSION(A, q+1, r) pour trier la moitié droite.
+                        </div>
+                        
+                        <div class="step-item">
+                            <span class="step-number">5</span>
+                            <strong>Fusion :</strong> Appeler FUSION(A, p, q, r) pour fusionner les deux moitiés triées.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔢 Comprendre le Calcul de q (milieu)</h3>
+                
+                <div class="indices-explanation">
+                    <h4>📐 Formule : q = ⌊(p + r) / 2⌋</h4>
+                    
+                    <p><strong>Exemples de calcul :</strong></p>
+                    
+                    <div class="example-box" style="margin: 20px 0;">
+                        <p><strong>Cas 1 :</strong> p = 1, r = 9</p>
+                        <ul>
+                            <li>q = ⌊(1 + 9) / 2⌋ = ⌊10 / 2⌋ = ⌊5⌋ = 5</li>
+                            <li>Sous-tableau gauche : A[1..5] (5 éléments)</li>
+                            <li>Sous-tableau droit : A[6..9] (4 éléments)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box" style="margin: 20px 0;">
+                        <p><strong>Cas 2 :</strong> p = 1, r = 8</p>
+                        <ul>
+                            <li>q = ⌊(1 + 8) / 2⌋ = ⌊9 / 2⌋ = ⌊4.5⌋ = 4</li>
+                            <li>Sous-tableau gauche : A[1..4] (4 éléments)</li>
+                            <li>Sous-tableau droit : A[5..8] (4 éléments)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="example-box" style="margin: 20px 0;">
+                        <p><strong>Cas 3 :</strong> p = 3, r = 7</p>
+                        <ul>
+                            <li>q = ⌊(3 + 7) / 2⌋ = ⌊10 / 2⌋ = 5</li>
+                            <li>Sous-tableau gauche : A[3..5] (3 éléments)</li>
+                            <li>Sous-tableau droit : A[6..7] (2 éléments)</li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>⚠️ Attention :</strong> Le symbole ⌊ ⌋ représente la partie entière (floor). En JavaScript, on utilise Math.floor().</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💻 Algorithme Complet TRI-FUSION</h3>
+                <div class="algorithm-box">
+<span class="function">TRI-FUSION</span>(A, p, r):
+  <span class="comment">// Condition d'arrêt : si p < r, il y a au moins 2 éléments</span>
+  <span class="keyword">si</span> p &lt; r:
+    
+    <span class="comment">// ÉTAPE 1 : DIVISER - Calculer le milieu</span>
+    q ← ⌊(p + r) / 2⌋
+    
+    <span class="comment">// ÉTAPE 2 : RÉGNER - Trier récursivement les deux moitiés</span>
+    <span class="function">TRI-FUSION</span>(A, p, q)        <span class="comment">// Trier la moitié gauche</span>
+    <span class="function">TRI-FUSION</span>(A, q+1, r)      <span class="comment">// Trier la moitié droite</span>
+    
+    <span class="comment">// ÉTAPE 3 : COMBINER - Fusionner les deux moitiés triées</span>
+    <span class="function">FUSION</span>(A, p, q, r)
+    
+  <span class="keyword">fin si</span>
+<span class="keyword">fin</span> TRI-FUSION
+                </div>
+
+                <p style="margin-top: 20px;"><strong>🎯 Analyse :</strong></p>
+                <ul>
+                    <li><strong>Cas de base :</strong> p ≥ r (0 ou 1 élément, déjà trié)</li>
+                    <li><strong>Récursivité :</strong> L'algorithme s'appelle lui-même sur des sous-tableaux de plus en plus petits</li>
+                    <li><strong>Profondeur de récursion :</strong> log₂(n) niveaux</li>
+                    <li><strong>Complexité temporelle :</strong> O(n log n)</li>
+                    <li><strong>Complexité spatiale :</strong> O(n) + O(log n) pour la pile de récursion</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>📊 Trace d'Exécution sur [23, 12, 4, 56, 35, 32, 42, 57, 3]</h3>
+                
+                <div class="example-box">
+                    <h4>🌳 Arbre de Récursion (indices à partir de 1)</h4>
+                    <pre style="font-family: monospace; line-height: 1.8; font-size: 0.95em;">
+<strong>Niveau 0:</strong> TRI-FUSION(A, 1, 9)  →  [23,12,4,56,35,32,42,57,3]
+                │
+                ├─ q = ⌊(1+9)/2⌋ = 5
+                │
+    ┌───────────┴───────────┐
+    │                       │
+<strong>Niveau 1:</strong>
+TRI-FUSION(A, 1, 5)      TRI-FUSION(A, 6, 9)
+[23,12,4,56,35]          [32,42,57,3]
+    │                       │
+    ├─ q=3                  ├─ q=7
+    │                       │
+┌───┴───┐               ┌───┴───┐
+│       │               │       │
+<strong>Niveau 2:</strong>
+(1,3)  (4,5)           (6,7)  (8,9)
+[23,12,4] [56,35]      [32,42] [57,3]
+
+...et ainsi de suite jusqu'aux feuilles (éléments uniques)
+
+<strong>Remontée (Fusion) :</strong>
+[4,12,23] ← FUSION([12,23], [4])
+[35,56] ← FUSION([56], [35])
+[4,12,23,35,56] ← FUSION([4,12,23], [35,56])
+...
+[3,4,12,23,32,35,42,56,57] ← Résultat final
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- ONGLET ANIMATION -->
+        <div id="animation" class="tab-content">
+            <div class="hero-box">
+                <h2>🎬 Animation Interactive Complète</h2>
+                <p>Visualisation étape par étape avec explications détaillées</p>
+            </div>
+
+            <div class="controls">
+                <button class="btn-primary" onclick="startAnimation()">▶️ Démarrer</button>
+                <button class="btn-secondary" onclick="nextStep()">⏭️ Étape Suivante</button>
+                <button class="btn-info" onclick="prevStep()">⏮️ Étape Précédente</button>
+                <button class="btn-danger" onclick="resetAnimation()">🔄 Réinitialiser</button>
+            </div>
+
+            <div class="options">
+                <div class="option-group">
+                    <input type="checkbox" id="showIndices" checked onchange="updateDisplay()">
+                    <label for="showIndices">Afficher les indices</label>
+                </div>
+                <div class="option-group">
+                    <input type="checkbox" id="showTree" checked onchange="updateDisplay()">
+                    <label for="showTree">Afficher l'arbre de récursion</label>
+                </div>
+                <div class="option-group">
+                    <input type="checkbox" id="showMergeDetails" checked onchange="updateDisplay()">
+                    <label for="showMergeDetails">Détails de fusion</label>
+                </div>
+                <div class="option-group">
+                    <input type="checkbox" id="autoPlay" onchange="toggleAutoPlay()">
+                    <label for="autoPlay">Lecture automatique</label>
+                </div>
+                <div class="speed-control">
+                    <label for="speedRange">Vitesse :</label>
+                    <input type="range" id="speedRange" min="500" max="3000" value="2000" step="500">
+                    <span class="speed-value" id="speedValue">2s</span>
+                </div>
+            </div>
+
+            <div class="step-counter" id="stepCounter">🎯 Prêt à commencer</div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #667eea;"></div>
+                    <span class="legend-text">Non trié</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f6ad55;"></div>
+                    <span class="legend-text">Division</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4299e1;"></div>
+                    <span class="legend-text">Gauche (L)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #48bb78;"></div>
+                    <span class="legend-text">Droite (R)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ed64a6;"></div>
+                    <span class="legend-text">Fusion</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #38a169;"></div>
+                    <span class="legend-text">Trié</span>
+                </div>
+            </div>
+
+            <!-- Affichage des indices courants -->
+            <div class="indices-display" id="indicesDisplay" style="display: none;">
+                <div class="indices-title">📊 Indices en Temps Réel</div>
+                <div class="indices-grid" id="indicesGrid"></div>
+            </div>
+
+            <!-- Visualisation principale -->
+            <div class="visualization-container">
+                <div class="array-visualization">
+                    <div class="array-container" id="arrayContainer"></div>
+                </div>
+            </div>
+
+            <!-- Détails de la fusion -->
+            <div class="merge-detailed" id="mergeDetailed" style="display: none;">
+                <div class="merge-title">🔗 Détails de la Fusion en Cours</div>
+                <div id="comparisonVisual"></div>
+                <div class="merge-arrays" id="mergeArrays"></div>
+            </div>
+
+            <!-- Arbre de récursion -->
+            <div class="tree-container" id="treeContainer" style="display: none;">
+                <div class="tree-title">🌳 Arbre de Récursion</div>
+                <div id="treeContent"></div>
+            </div>
+
+            <!-- Panneau d'informations -->
+            <div class="info-panel">
+                <div class="info-header">
+                    <span class="info-icon" id="infoIcon">📖</span>
+                    <div class="info-title" id="infoTitle">Bienvenue</div>
+                    <span class="phase-badge" id="phaseBadge" style="display: none;"></span>
+                </div>
+                <div class="info-content" id="infoContent">
+                    Cliquez sur "Démarrer" pour commencer l'animation du tri-fusion sur le tableau [23, 12, 4, 56, 35, 32, 42, 57, 3].
+                    
+                    Vous verrez chaque étape de l'algorithme avec :
+                    • Les indices p, q, r à chaque appel
+                    • La division du tableau
+                    • Les comparaisons lors de la fusion
+                    • L'arbre de récursion complet
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        const initialArray = [23, 12, 4, 56, 35, 32, 42, 57, 3];
+        let steps = [];
+        let currentStep = 0;
+        let autoPlayInterval = null;
+
+        // Gestion des onglets
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'animation' && steps.length === 0) {
+                generateSteps();
+                displayStep(0);
+            }
+        }
+
+        // Génération des étapes détaillées
+        function generateSteps() {
+            steps = [];
+            let array = [...initialArray];
+            let stepId = 0;
+
+            steps.push({
+                id: stepId++,
+                type: 'start',
+                array: [...initialArray],
+                phase: 'intro',
+                title: '🚀 Démarrage du Tri-Fusion',
+                description: `Nous allons trier le tableau : [${initialArray.join(', ')}]`,
+                detail: `📋 Appel Initial : TRI-FUSION(A, 0, 8)
+
+Dans notre animation (JavaScript), les indices commencent à 0 :
+• p = 0 (premier indice)
+• r = 8 (dernier indice)
+• Nombre d'éléments : 9
+
+Note : En algorithmique théorique, ce serait TRI-FUSION(A, 1, 9)
+
+L'algorithme va :
+1️⃣ Diviser le tableau en deux moitiés
+2️⃣ Trier récursivement chaque moitié
+3️⃣ Fusionner les deux moitiés triées`,
+                icon: '🚀'
+            });
+
+            function triFusion(arr, p, r, depth = 0, position = '') {
+                if (p < r) {
+                    let q = Math.floor((p + r) / 2);
+                    
+                    // Phase DIVISER
+                    steps.push({
+                        id: stepId++,
+                        type: 'divide',
+                        array: [...arr],
+                        p: p,
+                        q: q,
+                        r: r,
+                        depth: depth,
+                        position: position,
+                        phase: 'diviser',
+                        title: '✂️ DIVISER',
+                        description: `Division du sous-tableau [${p}..${r}]`,
+                        detail: `📐 Calcul du Milieu :
+q = ⌊(p + r) / 2⌋ = ⌊(${p} + ${r}) / 2⌋ = ⌊${(p+r)/2}⌋ = ${q}
+
+📊 Division :
+• Sous-tableau GAUCHE : [${p}..${q}] = [${arr.slice(p, q+1).join(', ')}]
+  → ${q-p+1} éléments
+  
+• Sous-tableau DROIT : [${q+1}..${r}] = [${arr.slice(q+1, r+1).join(', ')}]
+  → ${r-q} éléments
+
+🔄 Prochaine étape :
+On va appeler récursivement TRI-FUSION sur la partie gauche`,
+                        icon: '✂️',
+                        indices: { p, q, r, n1: q-p+1, n2: r-q }
+                    });
+
+                    // Récursion gauche
+                    triFusion(arr, p, q, depth + 1, position + 'L');
+                    
+                    // Récursion droite
+                    triFusion(arr, q + 1, r, depth + 1, position + 'R');
+                    
+                    // Phase FUSION
+                    steps.push({
+                        id: stepId++,
+                        type: 'merge_start',
+                        array: [...arr],
+                        p: p,
+                        q: q,
+                        r: r,
+                        depth: depth,
+                        position: position,
+                        phase: 'combiner',
+                        title: '🔗 COMBINER - Début de Fusion',
+                        description: `Fusion de [${p}..${q}] et [${q+1}..${r}]`,
+                        detail: `🎯 Appel : FUSION(A, ${p}, ${q}, ${r})
+
+Les deux sous-tableaux sont maintenant triés :
+• Gauche [${p}..${q}] : [${arr.slice(p, q+1).join(', ')}]
+• Droite [${q+1}..${r}] : [${arr.slice(q+1, r+1).join(', ')}]
+
+📝 Étapes de la fusion :
+1. Créer des tableaux temporaires L et R
+2. Copier les données
+3. Comparer et fusionner élément par élément`,
+                        icon: '🔗',
+                        indices: { p, q, r }
+                    });
+
+                    // Simulation de la fusion détaillée
+                    let n1 = q - p + 1;
+                    let n2 = r - q;
+                    let L = [];
+                    let R = [];
+
+                    for (let i = 0; i < n1; i++) {
+                        L[i] = arr[p + i];
+                    }
+                    for (let j = 0; j < n2; j++) {
+                        R[j] = arr[q + 1 + j];
+                    }
+
+                    steps.push({
+                        id: stepId++,
+                        type: 'merge_arrays',
+                        array: [...arr],
+                        p: p,
+                        q: q,
+                        r: r,
+                        L: [...L],
+                        R: [...R],
+                        depth: depth,
+                        phase: 'regner',
+                        title: '📋 Création des Tableaux L et R',
+                        description: `Tableaux temporaires créés`,
+                        detail: `📊 Calcul des Tailles :
+n1 = q - p + 1 = ${q} - ${p} + 1 = ${n1}
+n2 = r - q = ${r} - ${q} = ${n2}
+
+📝 Copie des Données :
+
+Tableau L (gauche) :
+${L.map((val, idx) => `L[${idx}] ← A[${p+idx}] = ${val}`).join('\n')}
+
+Tableau R (droite) :
+${R.map((val, idx) => `R[${idx}] ← A[${q+1+idx}] = ${val}`).join('\n')}
+
+🔄 Initialisation :
+i = 0 (pointeur sur L)
+j = 0 (pointeur sur R)
+k = ${p} (position dans A)`,
+                        icon: '📋',
+                        indices: { p, q, r, n1, n2, i: 0, j: 0, k: p }
+                    });
+
+                    let i = 0, j = 0, k = p;
+                    let comparisonCount = 0;
+
+                    while (i < n1 && j < n2) {
+                        comparisonCount++;
+                        let comparison = L[i] <= R[j];
+                        
+                        if (comparison) {
+                            arr[k] = L[i];
+                            steps.push({
+                                id: stepId++,
+                                type: 'merge_step',
+                                array: [...arr],
+                                p: p,
+                                q: q,
+                                r: r,
+                                k: k,
+                                L: [...L],
+                                R: [...R],
+                                i: i,
+                                j: j,
+                                depth: depth,
+                                comparisonCount: comparisonCount,
+                                comparison: { left: L[i], right: R[j], result: true },
+                                phase: 'combiner',
+                                title: `🔍 Comparaison ${comparisonCount}`,
+                                description: `${L[i]} ≤ ${R[j]} → Prendre L[${i}]`,
+                                detail: `📊 État Actuel :
+i = ${i}, j = ${j}, k = ${k}
+
+🔍 Comparaison :
+L[${i}] = ${L[i]}
+R[${j}] = ${R[j]}
+
+Condition : L[${i}] ≤ R[${j}] ?
+${L[i]} ≤ ${R[j]} ? OUI ✓
+
+✅ Action :
+A[${k}] ← L[${i}] = ${L[i]}
+i ← i + 1 = ${i+1}
+k ← k + 1 = ${k+1}
+
+📈 Progression :
+Tableau en construction : [${arr.slice(p, k+1).join(', ')}...]
+${k-p+1} élément(s) fusionné(s) sur ${r-p+1}`,
+                                icon: '🔍',
+                                indices: { p, q, r, n1, n2, i, j, k }
+                            });
+                            i++;
+                        } else {
+                            arr[k] = R[j];
+                            steps.push({
+                                id: stepId++,
+                                type: 'merge_step',
+                                array: [...arr],
+                                p: p,
+                                q: q,
+                                r: r,
+                                k: k,
+                                L: [...L],
+                                R: [...R],
+                                i: i,
+                                j: j,
+                                depth: depth,
+                                comparisonCount: comparisonCount,
+                                comparison: { left: L[i], right: R[j], result: false },
+                                phase: 'combiner',
+                                title: `🔍 Comparaison ${comparisonCount}`,
+                                description: `${L[i]} > ${R[j]} → Prendre R[${j}]`,
+                                detail: `📊 État Actuel :
+i = ${i}, j = ${j}, k = ${k}
+
+🔍 Comparaison :
+L[${i}] = ${L[i]}
+R[${j}] = ${R[j]}
+
+Condition : L[${i}] ≤ R[${j}] ?
+${L[i]} ≤ ${R[j]} ? NON ✗
+
+✅ Action :
+A[${k}] ← R[${j}] = ${R[j]}
+j ← j + 1 = ${j+1}
+k ← k + 1 = ${k+1}
+
+📈 Progression :
+Tableau en construction : [${arr.slice(p, k+1).join(', ')}...]
+${k-p+1} élément(s) fusionné(s) sur ${r-p+1}`,
+                                icon: '🔍',
+                                indices: { p, q, r, n1, n2, i, j, k }
+                            });
+                            j++;
+                        }
+                        k++;
+                    }
+
+                    // Copie des éléments restants de L
+                    while (i < n1) {
+                        arr[k] = L[i];
+                        steps.push({
+                            id: stepId++,
+                            type: 'merge_step',
+                            array: [...arr],
+                            p: p,
+                            q: q,
+                            r: r,
+                            k: k,
+                            L: [...L],
+                            R: [...R],
+                            i: i,
+                            j: j,
+                            depth: depth,
+                            phase: 'combiner',
+                            title: '📋 Copie Finale',
+                            description: `Copie L[${i}] = ${L[i]}`,
+                            detail: `📊 R est épuisé (j = ${j} ≥ ${n2})
+
+✅ Copie des éléments restants de L :
+A[${k}] ← L[${i}] = ${L[i]}
+i ← i + 1 = ${i+1}
+k ← k + 1 = ${k+1}
+
+📈 Tableau : [${arr.slice(p, k+1).join(', ')}...]`,
+                            icon: '📋',
+                            indices: { p, q, r, n1, n2, i, j, k }
+                        });
+                        i++;
+                        k++;
+                    }
+
+                    // Copie des éléments restants de R
+                    while (j < n2) {
+                        arr[k] = R[j];
+                        steps.push({
+                            id: stepId++,
+                            type: 'merge_step',
+                            array: [...arr],
+                            p: p,
+                            q: q,
+                            r: r,
+                            k: k,
+                            L: [...L],
+                            R: [...R],
+                            i: i,
+                            j: j,
+                            depth: depth,
+                            phase: 'combiner',
+                            title: '📋 Copie Finale',
+                            description: `Copie R[${j}] = ${R[j]}`,
+                            detail: `📊 L est épuisé (i = ${i} ≥ ${n1})
+
+✅ Copie des éléments restants de R :
+A[${k}] ← R[${j}] = ${R[j]}
+j ← j + 1 = ${j+1}
+k ← k + 1 = ${k+1}
+
+📈 Tableau : [${arr.slice(p, k+1).join(', ')}...]`,
+                            icon: '📋',
+                            indices: { p, q, r, n1, n2, i, j, k }
+                        });
+                        j++;
+                        k++;
+                    }
+
+                    steps.push({
+                        id: stepId++,
+                        type: 'merge_complete',
+                        array: [...arr],
+                        p: p,
+                        q: q,
+                        r: r,
+                        depth: depth,
+                        position: position,
+                        phase: 'combiner',
+                        title: '✅ Fusion Terminée',
+                        description: `Sous-tableau [${p}..${r}] trié`,
+                        detail: `🎉 Fusion Complète !
+
+Résultat : [${arr.slice(p, r+1).join(', ')}]
+
+📊 Statistiques :
+• Éléments fusionnés : ${r-p+1}
+• Comparaisons effectuées : ${comparisonCount}
+
+Le sous-tableau [${p}..${r}] est maintenant trié.
+${depth > 0 ? 'On remonte dans la récursion.' : 'Le tri est terminé !'}`,
+                        icon: '✅',
+                        indices: { p, q, r }
+                    });
+                } else {
+                    // Cas de base
+                    steps.push({
+                        id: stepId++,
+                        type: 'base_case',
+                        array: [...arr],
+                        p: p,
+                        r: r,
+                        depth: depth,
+                        position: position,
+                        phase: 'regner',
+                        title: '🎯 Cas de Base',
+                        description: `Élément unique : A[${p}] = ${arr[p]}`,
+                        detail: `🎯 Condition d'arrêt atteinte
+
+TRI-FUSION(A, ${p}, ${r})
+
+Condition : p < r ?
+${p} < ${r} ? ${p < r ? 'OUI' : 'NON'}
+
+${p >= r ? `✅ Cas de base : Un tableau d'un seul élément est déjà trié.
+Élément : A[${p}] = ${arr[p]}
+
+On ne fait rien et on remonte dans la récursion.` : ''}`,
+                        icon: '🎯',
+                        indices: { p, r }
+                    });
+                }
+            }
+
+            triFusion(array, 0, array.length - 1, 0, '');
+
+            steps.push({
+                id: stepId++,
+                type: 'complete',
+                array: [...array],
+                phase: 'complete',
+                title: '🎉 Tri Terminé !',
+                description: `Le tableau est maintenant complètement trié`,
+                detail: `🏆 TRI-FUSION TERMINÉ !
+
+Tableau initial : [${initialArray.join(', ')}]
+Tableau trié : [${array.join(', ')}]
+
+📊 Statistiques Finales :
+• Nombre total d'étapes : ${stepId}
+• Éléments triés : ${array.length}
+• Profondeur de récursion : ${Math.ceil(Math.log2(array.length))} niveaux
+• Complexité : O(n log n) = O(${array.length} × ${Math.ceil(Math.log2(array.length))})
+
+✅ Le tableau est trié en ordre croissant !`,
+                icon: '🎉'
+            });
+        }
+
+        // Affichage du tableau
+        function displayArray(step) {
+            const container = document.getElementById('arrayContainer');
+            const showIndices = document.getElementById('showIndices').checked;
+            
+            container.innerHTML = '';
+            
+            const arr = step.array;
+            const maxVal = Math.max(...arr);
+            
+            arr.forEach((value, index) => {
+                const item = document.createElement('div');
+                item.className = 'array-item';
+                
+                const bar = document.createElement('div');
+                bar.className = 'array-bar';
+                bar.style.height = `${(value / maxVal) * 180 + 40}px`;
+                bar.textContent = value;
+                
+                // Coloration selon l'étape
+                if (step.type === 'divide' && index >= step.p && index <= step.r) {
+                    bar.classList.add('dividing');
+                } else if ((step.type === 'merge_arrays' || step.type === 'merge_start' || step.type === 'merge_step') && step.p !== undefined) {
+                    if (index >= step.p && index <= step.q) {
+                        bar.classList.add('left-part');
+                    } else if (index >= step.q + 1 && index <= step.r) {
+                        bar.classList.add('right-part');
+                    }
+                    if (step.type === 'merge_step' && index === step.k) {
+                        bar.classList.add('current-position');
+                    }
+                } else if (step.type === 'merge_complete' && index >= step.p && index <= step.r) {
+                    bar.classList.add('sorted');
+                } else if (step.type === 'complete') {
+                    bar.classList.add('sorted');
+                } else if (step.type === 'base_case' && index === step.p) {
+                    bar.classList.add('sorted');
+                }
+                
+                if (showIndices) {
+                    const indexLabel = document.createElement('div');
+                    indexLabel.className = 'array-index';
+                    indexLabel.textContent = `[${index}]`;
+                    item.appendChild(bar);
+                    item.appendChild(indexLabel);
+                } else {
+                    item.appendChild(bar);
+                }
+                
+                container.appendChild(item);
+            });
+        }
+
+        // Affichage des détails de fusion
+        function displayMergeDetails(step) {
+            const showDetails = document.getElementById('showMergeDetails').checked;
+            const mergeDetailed = document.getElementById('mergeDetailed');
+            const comparisonVisual = document.getElementById('comparisonVisual');
+            const mergeArrays = document.getElementById('mergeArrays');
+            
+            if (!showDetails || !step.L || !step.R) {
+                mergeDetailed.style.display = 'none';
+                return;
+            }
+            
+            mergeDetailed.style.display = 'block';
+            
+            // Affichage de la comparaison si disponible
+            if (step.comparison) {
+                comparisonVisual.innerHTML = `
+                    <div class="comparison-visual">
+                        <div class="comparison-box" style="background: #bee3f8; color: #2c5282;">
+                            L[${step.i}] = ${step.comparison.left}
+                        </div>
+                        <div class="comparison-operator">${step.comparison.result ? '≤' : '>'}</div>
+                        <div class="comparison-box" style="background: #c6f6d5; color: #22543d;">
+                            R[${step.j}] = ${step.comparison.right}
+                        </div>
+                        <div class="comparison-result ${step.comparison.result ? 'true' : 'false'}">
+                            ${step.comparison.result ? '✓ VRAI' : '✗ FAUX'}
+                        </div>
+                    </div>
+                `;
+            } else {
+                comparisonVisual.innerHTML = '';
+            }
+            
+            // Affichage des tableaux L et R
+            mergeArrays.innerHTML = '';
+            
+            // Tableau L
+            const leftSection = document.createElement('div');
+            leftSection.className = 'merge-array-section';
+            
+            const leftLabel = document.createElement('div');
+            leftLabel.className = 'merge-array-label left';
+            leftLabel.textContent = 'Tableau L (Gauche)';
+            leftSection.appendChild(leftLabel);
+            
+            const leftCells = document.createElement('div');
+            leftCells.className = 'merge-cells';
+            step.L.forEach((val, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'merge-cell';
+                cell.textContent = val;
+                if (step.i !== undefined && idx === step.i) {
+                    cell.classList.add('pointer-here');
+                } else if (step.i !== undefined && idx < step.i) {
+                    cell.classList.add('used');
+                }
+                leftCells.appendChild(cell);
+            });
+            leftSection.appendChild(leftCells);
+            
+            if (step.i !== undefined) {
+                const pointer = document.createElement('div');
+                pointer.className = 'merge-pointer';
+                pointer.innerHTML = `
+                    <div class="pointer-arrow">↑</div>
+                    <div class="pointer-label">i = ${step.i}</div>
+                `;
+                leftSection.appendChild(pointer);
+            }
+            
+            mergeArrays.appendChild(leftSection);
+            
+            // Tableau R
+            const rightSection = document.createElement('div');
+            rightSection.className = 'merge-array-section';
+            
+            const rightLabel = document.createElement('div');
+            rightLabel.className = 'merge-array-label right';
+            rightLabel.textContent = 'Tableau R (Droite)';
+            rightSection.appendChild(rightLabel);
+            
+            const rightCells = document.createElement('div');
+            rightCells.className = 'merge-cells';
+            step.R.forEach((val, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'merge-cell';
+                cell.textContent = val;
+                if (step.j !== undefined && idx === step.j) {
+                    cell.classList.add('pointer-here');
+                } else if (step.j !== undefined && idx < step.j) {
+                    cell.classList.add('used');
+                }
+                rightCells.appendChild(cell);
+            });
+            rightSection.appendChild(rightCells);
+            
+            if (step.j !== undefined) {
+                const pointer = document.createElement('div');
+                pointer.className = 'merge-pointer';
+                pointer.innerHTML = `
+                    <div class="pointer-arrow">↑</div>
+                    <div class="pointer-label">j = ${step.j}</div>
+                `;
+                rightSection.appendChild(pointer);
+            }
+            
+            mergeArrays.appendChild(rightSection);
+            
+            // Tableau résultat
+            if (step.k !== undefined) {
+                const resultSection = document.createElement('div');
+                resultSection.className = 'merge-array-section';
+                
+                const resultLabel = document.createElement('div');
+                resultLabel.className = 'merge-array-label result';
+                resultLabel.textContent = `Position k = ${step.k} dans A`;
+                resultSection.appendChild(resultLabel);
+                
+                mergeArrays.appendChild(resultSection);
+            }
+        }
+
+        // Affichage des indices
+        function displayIndices(step) {
+            const indicesDisplay = document.getElementById('indicesDisplay');
+            const indicesGrid = document.getElementById('indicesGrid');
+            
+            if (!step.indices) {
+                indicesDisplay.style.display = 'none';
+                return;
+            }
+            
+            indicesDisplay.style.display = 'block';
+            indicesGrid.innerHTML = '';
+            
+            const indicesInfo = [
+                { name: 'p', desc: 'Début', value: step.indices.p },
+                { name: 'q', desc: 'Milieu', value: step.indices.q },
+                { name: 'r', desc: 'Fin', value: step.indices.r },
+                { name: 'n1', desc: 'Taille L', value: step.indices.n1 },
+                { name: 'n2', desc: 'Taille R', value: step.indices.n2 },
+                { name: 'i', desc: 'Pointeur L', value: step.indices.i },
+                { name: 'j', desc: 'Pointeur R', value: step.indices.j },
+                { name: 'k', desc: 'Position', value: step.indices.k }
+            ].filter(ind => ind.value !== undefined);
+            
+            indicesInfo.forEach(ind => {
+                const item = document.createElement('div');
+                item.className = 'indice-item';
+                item.innerHTML = `
+                    <div class="indice-name">${ind.name}</div>
+                    <div class="indice-value">${ind.value}</div>
+                    <div class="indice-description">${ind.desc}</div>
+                `;
+                indicesGrid.appendChild(item);
+            });
+        }
+
+        // Affichage de l'arbre
+        function displayTree(step) {
+            const showTree = document.getElementById('showTree').checked;
+            const treeContainer = document.getElementById('treeContainer');
+            
+            if (!showTree) {
+                treeContainer.style.display = 'none';
+                return;
+            }
+            
+            treeContainer.style.display = 'block';
+            const treeContent = document.getElementById('treeContent');
+            treeContent.innerHTML = '';
+            
+            // Construction simplifiée de l'arbre basée sur les étapes
+            let levels = {};
+            for (let i = 0; i <= currentStep; i++) {
+                const s = steps[i];
+                if (s.depth !== undefined && s.p !== undefined && s.r !== undefined) {
+                    if (!levels[s.depth]) levels[s.depth] = [];
+                    
+                    const nodeData = {
+                        value: s.array.slice(s.p, s.r+1).join(','),
+                        indices: `[${s.p}..${s.r}]`,
+                        state: s.type,
+                        isCurrent: i === currentStep
+                    };
+                    
+                    // Éviter les doublons
+                    if (!levels[s.depth].some(n => n.indices === nodeData.indices)) {
+                        levels[s.depth].push(nodeData);
+                    } else if (nodeData.isCurrent) {
+                        // Mettre à jour l'état si c'est le nœud courant
+                        const existing = levels[s.depth].find(n => n.indices === nodeData.indices);
+                        existing.state = s.type;
+                        existing.isCurrent = true;
+                    }
+                }
+            }
+            
+            Object.keys(levels).sort((a, b) => a - b).forEach(level => {
+                const levelLabel = document.createElement('div');
+                levelLabel.className = 'tree-level-label';
+                levelLabel.textContent = `Niveau ${level}`;
+                treeContent.appendChild(levelLabel);
+                
+                const levelDiv = document.createElement('div');
+                levelDiv.className = 'tree-level';
+                
+                levels[level].forEach(node => {
+                    const nodeDiv = document.createElement('div');
+                    nodeDiv.className = 'tree-node';
+                    nodeDiv.setAttribute('data-indices', node.indices);
+                    nodeDiv.textContent = `[${node.value}]`;
+                    
+                    if (node.isCurrent) {
+                        nodeDiv.classList.add('active');
+                    } else if (node.state === 'merge_complete' || node.state === 'base_case') {
+                        nodeDiv.classList.add('completed');
+                    } else if (node.state === 'divide') {
+                        nodeDiv.classList.add('dividing');
+                    }
+                    
+                    levelDiv.appendChild(nodeDiv);
+                });
+                
+                treeContent.appendChild(levelDiv);
+            });
+        }
+
+        // Affichage d'une étape
+        function displayStep(stepIndex) {
+            if (stepIndex < 0 || stepIndex >= steps.length) return;
+            
+            currentStep = stepIndex;
+            const step = steps[stepIndex];
+            
+            // Mise à jour du compteur
+            document.getElementById('stepCounter').textContent = `📍 Étape ${stepIndex + 1} / ${steps.length}`;
+            
+            // Mise à jour des visualisations
+            displayArray(step);
+            displayMergeDetails(step);
+            displayIndices(step);
+            displayTree(step);
+            
+            // Mise à jour du panneau d'informations
+            document.getElementById('infoIcon').textContent = step.icon || '📖';
+            document.getElementById('infoTitle').textContent = step.title || 'Information';
+            document.getElementById('infoContent').textContent = step.detail || step.description || '';
+            
+            // Badge de phase
+            const phaseBadge = document.getElementById('phaseBadge');
+            if (step.phase) {
+                phaseBadge.style.display = 'inline-block';
+                phaseBadge.className = 'phase-badge phase-' + step.phase;
+                phaseBadge.textContent = step.phase.toUpperCase();
+            } else {
+                phaseBadge.style.display = 'none';
+            }
+        }
+
+        // Contrôles
+        function startAnimation() {
+            if (steps.length === 0) {
+                generateSteps();
+            }
+            currentStep = 0;
+            displayStep(0);
+        }
+
+        function nextStep() {
+            if (currentStep < steps.length - 1) {
+                displayStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                displayStep(currentStep - 1);
+            }
+        }
+
+        function resetAnimation() {
+            steps = [];
+            currentStep = 0;
+            document.getElementById('arrayContainer').innerHTML = '';
+            document.getElementById('mergeDetailed').style.display = 'none';
+            document.getElementById('indicesDisplay').style.display = 'none';
+            document.getElementById('treeContainer').style.display = 'none';
+            document.getElementById('stepCounter').textContent = '🎯 Prêt à commencer';
+            document.getElementById('infoTitle').textContent = 'Bienvenue';
+            document.getElementById('infoContent').textContent = 'Cliquez sur "Démarrer" pour commencer l\'animation.';
+            stopAutoPlay();
+            document.getElementById('autoPlay').checked = false;
+        }
+
+        function updateDisplay() {
+            if (steps.length > 0) {
+                displayStep(currentStep);
+            }
+        }
+
+        // Lecture automatique
+        function toggleAutoPlay() {
+            const isChecked = document.getElementById('autoPlay').checked;
+            if (isChecked) {
+                startAutoPlay();
+            } else {
+                stopAutoPlay();
+            }
+        }
+
+        function startAutoPlay() {
+            if (steps.length === 0) {
+                generateSteps();
+                currentStep = 0;
+            }
+            
+            const speed = parseInt(document.getElementById('speedRange').value);
+            
+            autoPlayInterval = setInterval(() => {
+                if (currentStep < steps.length - 1) {
+                    nextStep();
+                } else {
+                    stopAutoPlay();
+                    document.getElementById('autoPlay').checked = false;
+                }
+            }, speed);
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        }
+
+        // Gestion de la vitesse
+        document.getElementById('speedRange').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('speedValue').textContent = (value / 1000) + 's';
+            
+            if (autoPlayInterval) {
+                stopAutoPlay();
+                startAutoPlay();
+            }
+        });
+
+        // Gestion du clavier
+        document.addEventListener('keydown', function(e) {
+            if (document.querySelector('.tab-content.active').id === 'animation') {
+                if (e.key === 'ArrowRight') nextStep();
+                if (e.key === 'ArrowLeft') prevStep();
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    const autoPlayCheckbox = document.getElementById('autoPlay');
+                    autoPlayCheckbox.checked = !autoPlayCheckbox.checked;
+                    toggleAutoPlay();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
